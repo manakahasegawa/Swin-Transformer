@@ -180,11 +180,11 @@ class HadamardAttention(nn.Module):
         self.n_head = n_head
         self.kernel_size = kernel_size
         self.channel_size = channel_size
-        self.rq = nn.Parameters(torch.randn(channel_size, n_head, kernel_size*kernel_size))
+        self.rq = nn.Parameter(torch.randn(channel_size, n_head, kernel_size*kernel_size))
         nn.init.trunc_normal_(self.rq, std=0.02)
-        self.rk = nn.Parameters(torch.zeros(channel_size, n_head, kernel_size*kernel_size))
+        self.rk = nn.Parameter(torch.zeros(channel_size, n_head, kernel_size*kernel_size))
         nn.init.trunc_normal_(self.rk, std=0.02)
-        self.rb = nn.Parameters(n_head, kernel_size*kernel_size)
+        self.rb = nn.Parameter(n_head, kernel_size*kernel_size)
         self.unfold_up = nn.Unfold(kernel_size=kernel_size, padding=kernel_size//2, stride=1)
 
     def cal_hp_rk(self, hp):
@@ -207,8 +207,8 @@ class GhostHead(nn.Module):
         self.n_head = n_head
         self.kernel_size = kernel_size
         self.channel_size = channel_size
-        self.mul_matrix = nn.Parameters(torch.randn(channel_size, kernel_size, kernel_size))
-        self.add_matrix = nn.Parameters(torch.zeros(channel_size, kernel_size, kernel_size))
+        self.mul_matrix = nn.Parameter(torch.randn(channel_size, kernel_size, kernel_size))
+        self.add_matrix = nn.Parameter(torch.zeros(channel_size, kernel_size, kernel_size))
         nn.init.trunc_normal_(self.add_matrix, std=0.02)
         self.lambda_ = 0.2
         self.gamma = 0.3
