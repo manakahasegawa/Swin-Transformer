@@ -171,6 +171,20 @@ class ELSA(nn.Module):
         h_attn = self.hdamard_a(q, k)
         out = self.ghost_head(h_attn) * v
         return out
+    
+    
+    def flops(self, N):
+        # calculate flops for 1 window with token length of N
+        flops = 0
+        # qkv = self.qkv(x)
+        flops += N * self.dim * 3 * self.dim
+        # attn = (q @ k.transpose(-2, -1))
+        flops += self.num_heads * N * (self.dim // self.num_heads) * N
+        #  x = (attn @ v)
+        flops += self.num_heads * N * N * (self.dim // self.num_heads)
+        # x = self.proj(x)
+        flops += N * self.dim * self.dim
+        return flops
 
 
 class HadamardAttention(nn.Module):
@@ -199,19 +213,6 @@ class HadamardAttention(nn.Module):
         hp = q*k
         return (self.cal_hp_rk(hp) + self.cal_rq_hp(hp) \
              + self.rb.view(1, self.n_head, self.kernel_size*self.kernel_size, 1, 1)).softmax(2)
-    
-    def flops(self, N):
-        # calculate flops for 1 window with token length of N
-        flops = 0
-        # qkv = self.qkv(x)
-        flops += N * self.dim * 3 * self.dim
-        # attn = (q @ k.transpose(-2, -1))
-        flops += self.num_heads * N * (self.dim // self.num_heads) * N
-        #  x = (attn @ v)
-        flops += self.num_heads * N * N * (self.dim // self.num_heads)
-        # x = self.proj(x)
-        flops += N * self.dim * self.dim
-        return flops
 
 
 class GhostHead(nn.Module):
