@@ -184,7 +184,7 @@ class HadamardAttention(nn.Module):
         nn.init.trunc_normal_(self.rq, std=0.02)
         self.rk = nn.Parameter(torch.zeros(channel_size, n_head, kernel_size*kernel_size))
         nn.init.trunc_normal_(self.rk, std=0.02)
-        self.rb = nn.Parameter(n_head, kernel_size*kernel_size)
+        self.rb = nn.Parameter(torch.randn(n_head, kernel_size*kernel_size))
         self.unfold_up = nn.Unfold(kernel_size=kernel_size, padding=kernel_size//2, stride=1)
 
     def cal_hp_rk(self, hp):
