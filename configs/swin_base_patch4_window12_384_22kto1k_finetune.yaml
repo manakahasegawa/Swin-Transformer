@@ -1,5 +1,6 @@
 DATA:
   IMG_SIZE: 384
+  DATA_PATH: imagenet
 MODEL:
   TYPE: swin
   NAME: swin_base_patch4_window12_384_22kto1k_finetune
